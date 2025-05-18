@@ -1,0 +1,244 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Menu -->
+    <div id="sideMenu" class="side-menu">
+        <button class="close-btn" onclick="closeMenu()">&times;</button>
+        <a href="{% url 'role_page' %}">Change Role</a>
+        <a href="login.html">Log Out</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <header>
+            <div class="icons">
+                <button class="menu-btn" onclick="openMenu()">
+                    <span class="iconify" data-icon="el:lines" data-inline="false"></span>
+                </button>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search" />
+            </div>
+            <div class="icons">
+                    <button class="message" onclick="toggleNotifications()">
+                        <span class="iconify" data-icon="mdi:message" data-inline="false"></span>
+                    </button>
+                <button class="home" onclick="toggleHome()">
+                    <span class="iconify" data-icon="ic:baseline-home" data-inline="false"></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="welcome" font-size="40px">
+                <p><a href="profile.html" class="username">Welcome, <span id="userName">Name</span>!</a></p>
+                <p font-size="40px"><b>Role: Seller</b></p>
+            </section>
+
+            <!-- Category Filter and Add Product Button -->
+            <section class="category-filter-container">
+                <button class="add-btn" onclick="openAddProductModal()">Add Product</button>
+                <div class="filter-right">
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter" onchange="filterProducts()">
+                        <option value="all">All</option>
+                        <option value="pajamas">Pajamas</option>
+                        <option value="jeans">Jeans</option>
+                        <option value="shorts">Shorts</option>
+                        <option value="shirts">Shirts</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="products">
+                <!-- Product 1 -->
+                <div class="product" id="product-ball" data-category="shorts">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 1', 30.00, 'product-product1')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-ball">Ball</p>
+                    <p id="product-price-product-ball">Php 30.00</p>
+                </div>
+                <!-- Product 2 -->
+                <div class="product" id="product-product2" data-category="jeans">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 2', 40.00, 'product-product2')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-product2">Product 2</p>
+                    <p id="product-price-product-product2">Php 40.00</p>
+                </div>
+                <!-- Product 3 -->
+                <div class="product" id="product-product3" data-category="shirts">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 3', 50.00, 'product-product3')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-product3">Product 3</p>
+                    <p id="product-price-product-product3">Php 50.00</p>
+                </div>
+                <!-- Product 4 -->
+                <div class="product" id="product-product4" data-category="pajamas">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 4', 60.00, 'product-product4')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-product4">Product 4</p>
+                    <p id="product-price-product-product4">Php 60.00</p>
+                </div>
+                <!-- Product 5 -->
+                <div class="product" id="product-product5" data-category="pajamas">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 5', 70.00, 'product-product5')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-product5">Product 5</p>
+                    <p id="product-price-product-product5">Php 70.00</p>
+                </div>
+                <!-- Product 6 -->
+                <div class="product" id="product-product6" data-category="shorts">
+                    <div class="image"></div>
+                    <button class="edit-btn" onclick="openEditProductModal('Product 6', 80.00, 'product-product6')">
+                        <span class="iconify" data-icon="mdi:pencil" style="font-size: 24px;"></span>
+                    </button>
+                    <p id="product-name-product-product6">Product 6</p>
+                    <p id="product-price-product-product6">Php 80.00</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal structure for adding a product -->
+    <div id="addProductModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAddProductModal()">&times;</span>
+            
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <label for="add-product-name">Product Name</label>
+                <input type="text" id="add-product-name" name="product-name" required />
+                <label for="add-product-price">Product Price</label>
+                <input type="number" step="0.01" id="add-product-price" name="product-price" required />
+                
+                <!-- Product Category Dropdown -->
+                <label for="add-product-category">Category</label>
+                <select id="add-product-category" name="product-category" required>
+                    <option value="pajamas">Pajamas</option>
+                    <option value="jeans">Jeans</option>
+                    <option value="shorts">Shorts</option>
+                    <option value="shirts">Shirts</option>
+                </select>
+                
+                <!-- Product Image Upload -->
+                <label for="add-product-image">Product Image</label>
+                <input type="file" id="add-product-image" name="product-image" accept="image/*" onchange="previewImage(event)" />
+                
+                <!-- Image Preview -->
+                <div id="add-image-preview-container" style="display:none;">
+                    <img id="add-image-preview" src="" alt="Image Preview" style="width: 100%; max-height: 300px; object-fit: contain;"/>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="save-btn" type="submit">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal structure for editing a product -->
+    <div id="editProductModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditProductModal()">&times;</span>
+            
+            <h2>Edit Product</h2>
+            <form id="editForm">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" name="product-name" required />
+                <label for="product-price">Product Price</label>
+                <input type="number" step="0.01" id="product-price" name="product-price" required />
+                
+                <!-- Product Category Dropdown -->
+                <label for="product-category">Category</label>
+                <select id="product-category" name="product-category" required>
+                    <option value="pajamas">Pajamas</option>
+                    <option value="jeans">Jeans</option>
+                    <option value="shorts">Shorts</option>
+                    <option value="shirts">Shirts</option>
+                </select>
+                
+                <!-- Product Image Upload -->
+                <label for="product-image">Product Image</label>
+                <input type="file" id="product-image" name="product-image" accept="image/*" onchange="previewImage(event)" />
+                
+                <!-- Image Preview -->
+                <div id="image-preview-container" style="display:none;">
+                    <img id="image-preview" src="" alt="Image Preview" style="width: 100%; max-height: 300px; object-fit: contain;"/>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="save-btn" type="submit">Save Changes</button>
+                </div>
+            </form>
+            <div>
+                <!-- Delete Button -->
+                <button class="delete-btn" onclick="deleteProduct()">Delete Product</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to open the modal for adding a new product
+        function openAddProductModal() {
+          
+            document.getElementById('addProductForm').reset();
+            document.getElementById('add-image-preview-container').style.display = 'none';
+            
+            // Show the add product modal
+            document.getElementById('addProductModal').style.display = 'block';
+        }
+
+        // Function to open the modal for editing a product
+        function openEditProductModal(productName, productPrice, productId) {
+
+            // Set modal title and button text for editing
+            document.getElementById('editProductModal').style.display = 'block';
+            document.querySelector('#editProductModal h2').innerText = 'Edit Product';
+            document.querySelector('.save-btn').innerText = 'Save Changes';
+            document.querySelector('.delete-btn').style.display = 'inline-block';  
+
+            // Set the product details for editing
+            document.getElementById('product-name').value = productName;
+            document.getElementById('product-price').value = productPrice;
+        }
+
+        // Close the "Add Product" modal
+        function closeAddProductModal() {
+            document.getElementById('addProductModal').style.display = 'none';
+        }
+
+        // Close the "Edit Product" modal
+        function closeEditProductModal() {
+            document.getElementById('editProductModal').style.display = 'none';
+        }
+
+        // Function to delete a product (for editing mode only)
+        function deleteProduct() {
+
+            // Add logic to delete the product here
+            console.log("Product deleted.");
+            closeEditProductModal(); 
+        }
+    </script>
+</body>
+</html>

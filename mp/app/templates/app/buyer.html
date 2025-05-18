@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Buyer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Menu -->
+    <div id="sideMenu" class="side-menu">
+        <button class="close-btn" onclick="closeMenu()">&times;</button>
+        <a href="{% url 'role_page' %}">Change Role</a>
+        <a href="login.html">Log Out</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <header>
+            <div class="icons">
+                <button class="menu-btn" onclick="openMenu()">
+                    <span class="iconify" data-icon="el:lines" data-inline="false"></span>
+                </button>
+            </div>
+            <div class="search-bar">
+                <form id="searchForm" onsubmit="return searchProducts(event)">
+                    <input type="text" id="searchInput" placeholder="Search" />
+                </form>
+            </div>
+            <div class="icons">
+                <a href="{% url 'cart_page' %}">
+                    <button class="cart">
+                        <span class="iconify" data-icon="mdi:cart" data-inline="false"></span>
+                    </button>
+                </a>
+                <button class="home" onclick="toggleHome()">
+                    <span class="iconify" data-icon="ic:baseline-home" data-inline="false"></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Welcome Section -->
+            <section class="welcome">
+                <p><a href="profile.html" class="username">Welcome, <span id="userName">Name</span>!</a></p>
+                <p><b>Role: Buyer</b></p>
+            </section>
+            
+            <!-- Filter Section -->
+            <section class="filter-section">
+                <!-- Price Range Filter (left side) -->
+                <div class="filter-left">
+                    <label for="price-range">Price Range:</label>
+                    <select id="price-range" onchange="filterByPrice()">
+                        <option value="0-100">0 - 100</option>
+                        <option value="100-200">100 - 200</option>
+                        <option value="200-500">200 - 500</option>
+                        <option value="500-1000">500 - 1000</option>
+                    </select>
+                </div>
+
+                <!-- Category Filter (right side) -->
+                <div class="filter-right">
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter" onchange="filterByCategory()">
+                        <option value="all">All</option>
+                        <option value="pajamas">Pajamas</option>
+                        <option value="jeans">Jeans</option>
+                        <option value="shorts">Shorts</option>
+                        <option value="shirts">Shirts</option>
+                    </select>
+                </div>
+            </section>
+
+
+            <!-- Products Section -->
+            <section class="products">
+                <!-- Product 1 -->
+                <div class="product" id="product-ball" data-category="shorts" data-price="30">
+                    <div class="image"></div>
+                    <p id="product-name-product-ball">Ball</p>
+                    <p id="product-price-product-ball">Php 30.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-ball')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-ball')">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product" id="product-product2" data-category="jeans" data-price="120">
+                    <div class="image"></div>
+                    <p id="product-name-product-product2">Product 2</p>
+                    <p id="product-price-product-product2">Php 120.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-product2')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-product2')">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product" id="product-product3" data-category="shirts" data-price="150">
+                    <div class="image"></div>
+                    <p id="product-name-product-product3">Product 3</p>
+                    <p id="product-price-product-product3">Php 150.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-product3')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-product3')">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product" id="product-product4" data-category="pajamas" data-price="180">
+                    <div class="image"></div>
+                    <p id="product-name-product-product4">Product 4</p>
+                    <p id="product-price-product-product4">Php 180.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-product4')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-product4')">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product" id="product-product5" data-category="jeans" data-price="220">
+                    <div class="image"></div>
+                    <p id="product-name-product-product5">Product 5</p>
+                    <p id="product-price-product-product5">Php 220.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-product5')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-product5')">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product" id="product-product6" data-category="shorts" data-price="300">
+                    <div class="image"></div>
+                    <p id="product-name-product-product6">Product 6</p>
+                    <p id="product-price-product-product6">Php 300.00</p>
+                    <div class="product-buttons">
+                        <button class="add-cart-btn" onclick="addToCart('product-product6')">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct('product-product6')">Checkout</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

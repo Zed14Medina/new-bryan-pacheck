@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>App Login</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+<body id="loginBody">
+  <div id="container">
+    <div id="form-box">
+      <h1 id="app-title">thrift_bratz</h1>
+
+      {% if error %}
+      <div class="error-message">
+        <p>{{ error }}</p>
+      </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <label id="username-label" for="username">Username</label>
+        <div id="name-field">
+          <img id="name-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiIgdmlld0JveD0iMCAwIDI2IDI2Ij4KCTxwYXRoIGZpbGw9IiNBMkREMDAiIGQ9Ik0xNi41NjMgMTUuOWMtLjE1OS0uMDUyLTEuMTY0LS41MDUtLjUzNi0yLjQxNGgtLjAwOWMxLjYzNy0xLjY4NiAyLjg4OC00LjM5OSAyLjg4OC03LjA3YzAtNC4xMDctMi43MzEtNi4yNi01LjkwNS02LjI2Yy0zLjE3NiAwLTUuODkyIDIuMTUyLTUuODkyIDYuMjZjMCAyLjY4MiAxLjI0NCA1LjQwNiAyLjg5MSA3LjA4OGMuNjQyIDEuNjg0LS41MDYgMi4zMDktLjc0NiAyLjM5N2MtMy4zMjQgMS4yMDItNy4yMjQgMy4zOTMtNy4yMjQgNS41NTZ2LjgxMWMwIDIuOTQ3IDUuNzE0IDMuNjE3IDExLjAwMiAzLjYxN2M1LjI5NiAwIDEwLjkzOC0uNjcgMTAuOTM4LTMuNjE3di0uODExYzAtMi4yMjgtMy45MTktNC40MDItNy40MDctNS41NTciIC8+Cjwvc3ZnPg==" alt="username">
+          <input type="text" name="username" id="username" placeholder="Username" required>
+        </div>
+
+        <label id="password-label" for="password">Password</label>
+        <div id="password-field">
+          <img id="password-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBmaWxsPSIjQTJERDAwIiBkPSJNMjEgMmE4Ljk5OCA4Ljk5OCAwIDAgMC04LjYxMiAxMS42MTJMMiAyNHY2aDZsMTAuMzg4LTEwLjM4OEE5IDkgMCAxIDAgMjEgMm0wIDE2YTcgNyAwIDAgMS0yLjAzMi0uMzAybC0xLjE0Ny0uMzQ4bC0uODQ3Ljg0N2wtMy4xODEgMy4xODFMMTIuNDE0IDIwTDExIDIxLjQxNGwxLjM3OSAxLjM3OWwtMS41ODYgMS41ODZMOS40MTQgMjNMOCAyNC40MTRsMS4zNzkgMS4zNzlMNy4xNzIgMjhINHYtMy4xNzJsOS44MDItOS44MDJsLjg0OC0uODQ3bC0uMzQ4LTEuMTQ3QTcgNyAwIDEgMSAyMSAxOCIvPjxjaXJjbGUgY3g9IjIyIiBjeT0iMTAiIHI9IjIiIGZpbGw9IiNBMkREMDAiLz48L3N2Zz4=" alt="password">
+          <input type="password" name="password" id="password" placeholder="Password" required>
+        </div>
+        <button type="submit" id="login-btn">Log In</button>
+      </form>
+
+      <p id="or-text">or</p>
+      <a href="{% url 'signup' %}" id="signup-redirect-btn">Sign Up</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    
+    <style>
+        /* CHECKOUT */
+        .CheckBody {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img1.picmix.com/output/stamp/normal/2/0/2/9/2499202_e120b.gif'); /* Background image URL */
+            background-repeat: repeat; /* Make the image tile */
+            color: black;
+        }
+
+        .headerCheck {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            color: black;
+            text-transform: lowercase;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            font-family: Arial, sans-serif;
+        }
+
+        .back-iconCheck {
+            font-size: 30px;
+            color: black;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .checkout-content {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+
+        .receipt-container {
+            background-color: #FFF;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            width: 60%;
+            margin: 0 auto;
+            text-align: left;
+            border: 2px dashed #333;
+            font-family: 'Courier New', monospace; /* Simulates a receipt font */
+        }
+
+        .receipt-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .receipt-details {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .separator {
+            border-top: 2px dashed #333;
+            margin: 10px 0;
+        }
+
+        .total-price {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .payment-container {
+            padding: 20px;
+            border-radius: 15px;
+            width: 50%;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .payment-method {
+            margin: 10px;
+            padding: 15px;
+            background-color: #FF3366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 45%;
+        }
+
+        .payment-method:hover {
+            background-color: #FF1A50;
+        }
+
+        .address {
+            padding: 10px;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 200px;
+            margin: 50px auto;
+            padding: 15px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background-color: #00FF00;
+        }
+
+        .barcode {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            font-size: 20px;
+            color: black;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body id="CheckBody">
+    <div class="headerCheck">
+        <a href="/cart">  
+            <button class="back-iconCheck">
+                <span class="iconify" data-icon="material-symbols:arrow-back" data-inline="false"></span> 
+            </button>
+        </a>
+        <div>checkout</div>
+        <div></div> <!-- Empty div for spacing -->
+    </div>
+
+    <div class="checkout-content">
+        <!-- Receipt Section -->
+        <div class="receipt-container">
+            <div class="receipt-title">CASH RECEIPT</div>
+
+            <!-- Dynamically populate receipt items -->
+            <div id="receipt-items"></div>
+
+            <div class="separator"></div>
+
+            <div class="total-price">
+                <strong>Total:</strong> $<span id="total-price">0.00</span>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="barcode">
+                1234567890123456789012345678901234567890
+            </div>
+
+            <div class="separator"></div>
+
+            <div style="text-align: center;">
+                Thank you for shopping!
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="payment-container">
+            <h3>Choose Payment Method</h3>
+            <div class="payment-options">
+                <button class="payment-method" onclick="selectPaymentMethod('COD')">Cash on Delivery</button>
+                <button class="payment-method" onclick="selectPaymentMethod('GCASH')">GCASH</button>
+            </div>
+
+        <br>
+            <h3>Enter Home Address</h3>
+            <input type="text" id="address" class="address" placeholder="Enter your address" required>
+        </br>
+        </div>
+
+        <button class="checkout-btn" onclick="completePayment()">Complete Payment</button>
+    </div>
+    <script>
+        function completePayment() {
+            // Notify the user that the payment is completed
+            alert("Payment Completed! Redirecting to the Buyer Page.");
+    
+            // Redirect the user to the buyer page after a short delay
+            setTimeout(function() {
+                window.location.href = '/buyer';  // Redirect to the buyer page
+            }, 2000); // 2-second delay to allow the user to see the notification
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Selection</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+<body class="role-selection">
+    <div class="containerRole">
+        <h1 id="questionRole">Choose your role today:</h1>
+    <br>
+        <div class="role-container">
+            <button onclick="window.location.href='{% url "buyer" %}'" class="role-btn">Buyer</button>
+            <p id="role-or"><b>or</b></p>
+            <button onclick="window.location.href='{% url "seller_home" %}'" class="role-btn">Seller</button>            
+        </div>
+    </br>
+    </div>
+</body>
+</html>
