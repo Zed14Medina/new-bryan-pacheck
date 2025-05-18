@@ -7,16 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Buyer Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    <script src="{% static 'js/main.js' %}" defer></script>
+
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
 </head>
 <body>
     <!-- Sidebar Menu -->
     <div id="sideMenu" class="side-menu">
         <button class="close-btn" onclick="closeMenu()">&times;</button>
-        <a href="{% url 'role_page' %}">Change Role</a>
-        <a href="login.html">Log Out</a>
+        <a href="#" class="change-role">Change Role</a>
+        <a href="{% url 'logout' %}">Log Out</a>
     </div>
+
 
     <!-- Main content -->
     <div class="container">
@@ -147,5 +148,6 @@
             </section>
         </main>
     </div>
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

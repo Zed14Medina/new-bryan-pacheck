@@ -14,9 +14,10 @@
     <!-- Sidebar Menu -->
     <div id="sideMenu" class="side-menu">
         <button class="close-btn" onclick="closeMenu()">&times;</button>
-        <a href="{% url 'role_page' %}">Change Role</a>
-        <a href="login.html">Log Out</a>
+        <a href="#" class="change-role">Change Role</a>
+        <a href="{% url 'logout' %}">Log Out</a>
     </div>
+
 
     <!-- Main content -->
     <div class="container">
@@ -240,5 +241,6 @@
             closeEditProductModal(); 
         }
     </script>
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
