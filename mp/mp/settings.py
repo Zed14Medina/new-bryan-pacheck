@@ -81,7 +81,8 @@ DATABASES = {
         'NAME': 'CMSC121MP',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'localhost'
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

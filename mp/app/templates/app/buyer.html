@@ -80,74 +80,28 @@
 
             <!-- Products Section -->
             <section class="products">
-                <!-- Product 1 -->
-                <div class="product" id="product-ball" data-category="shorts" data-price="30">
-                    <div class="image"></div>
-                    <p id="product-name-product-ball">Ball</p>
-                    <p id="product-price-product-ball">Php 30.00</p>
+                {% for product in products %}
+                <div class="product" id="product-{{ product.id }}" data-category="{{ product.category.name|lower }}" data-price="{{ product.price }}">
+                    <div class="image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100px; height:100px; object-fit:cover;" />
+                        {% endif %}
+                    </div>
+                    <p id="product-name-{{ product.id }}">{{ product.name }}</p>
+                    <p id="product-price-{{ product.id }}">Php {{ product.price }}</p>
                     <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-ball')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-ball')">Checkout</button>
+                        <button class="add-cart-btn" onclick="addToCart({{ product.id }})">Add to Cart</button>
+                        <button class="checkout-btn" onclick="checkoutProduct({{ product.id }})">Checkout</button>
                     </div>
                 </div>
-
-                <!-- Product 2 -->
-                <div class="product" id="product-product2" data-category="jeans" data-price="120">
-                    <div class="image"></div>
-                    <p id="product-name-product-product2">Product 2</p>
-                    <p id="product-price-product-product2">Php 120.00</p>
-                    <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-product2')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-product2')">Checkout</button>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="product" id="product-product3" data-category="shirts" data-price="150">
-                    <div class="image"></div>
-                    <p id="product-name-product-product3">Product 3</p>
-                    <p id="product-price-product-product3">Php 150.00</p>
-                    <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-product3')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-product3')">Checkout</button>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="product" id="product-product4" data-category="pajamas" data-price="180">
-                    <div class="image"></div>
-                    <p id="product-name-product-product4">Product 4</p>
-                    <p id="product-price-product-product4">Php 180.00</p>
-                    <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-product4')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-product4')">Checkout</button>
-                    </div>
-                </div>
-
-                <!-- Product 5 -->
-                <div class="product" id="product-product5" data-category="jeans" data-price="220">
-                    <div class="image"></div>
-                    <p id="product-name-product-product5">Product 5</p>
-                    <p id="product-price-product-product5">Php 220.00</p>
-                    <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-product5')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-product5')">Checkout</button>
-                    </div>
-                </div>
-
-                <!-- Product 6 -->
-                <div class="product" id="product-product6" data-category="shorts" data-price="300">
-                    <div class="image"></div>
-                    <p id="product-name-product-product6">Product 6</p>
-                    <p id="product-price-product-product6">Php 300.00</p>
-                    <div class="product-buttons">
-                        <button class="add-cart-btn" onclick="addToCart('product-product6')">Add to Cart</button>
-                        <button class="checkout-btn" onclick="checkoutProduct('product-product6')">Checkout</button>
-                    </div>
-                </div>
+                {% endfor %}
             </section>
         </main>
     </div>
 <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
+
+
+
+

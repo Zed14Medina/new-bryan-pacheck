@@ -4,40 +4,52 @@
   margin: 0;
   font-family: Inter, Arial;
   background-color: #A2DD00;
+  min-height: 100vh;
 }
 
 #container {
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    height: 100vh; 
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  min-height: 100vh; 
+  padding: 20px;
+}
+
 #form-box {
-    background-color: white;
-    padding: 40px;
-    border-radius: 20px;
-    width: 800px; 
-    text-align: center;
-  }
-  
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 #app-title {
   margin-bottom: 30px;
   font-size: 32px;
+  color: #333;
 }
 
+#username-label,
 #email-label,
 #password-label,
-#name-label {
+#password1-label,
+#password2-label,
+#role-label {
   display: block;
   text-align: left;
   margin: 10px 0 5px 0;
   font-weight: bold;
+  color: #333;
 }
 
+#name-field,
 #email-field,
-#password-field {
+#password-field,
+#password-field-1,
+#password-field-2,
+#role-field {
   display: flex;
   align-items: center;
   background-color: #e3ecd3;
@@ -46,95 +58,360 @@
   margin-bottom: 15px;
 }
 
+#name-icon,
 #email-icon,
-#password-icon {
+#password-icon,
+#password-icon-1,
+#password-icon-2 {
   margin-right: 8px;
+  width: 24px;
+  height: 24px;
 }
 
+#username,
 #email,
-#password {
+#password,
+#password1,
+#password2,
+#role {
   border: none;
   outline: none;
   background: none;
   flex: 1;
   font-size: 14px;
+  padding: 5px;
 }
 
-#login-btn {
-  background-color: #a4e200;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  width: 100%;
-  color: black;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-}
-
-#or-text {
-  margin: 15px 0;
-  color: #333;
-}
-
-#signup-btn {
-  background-color: white;
-  border: 2px solid #a4e200;
-  border-radius: 10px;
-  padding: 10px;
-  width: 100%;
-  color: black;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
+#login-btn,
 #signup-btn2 {
   background-color: #a4e200;
   border: none;
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   color: black;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 20px;
   transition: background-color 0.3s ease;
 }
 
-#name-field {
-  display: flex;
-  align-items: center;
-  background-color: #e3ecd3;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
+#login-btn:hover,
+#signup-btn2:hover {
+  background-color: #8bc800;
 }
 
-#name-icon {
-  margin-right: 8px;
-}
-
-#name {
-  border: none;
-  outline: none;
-  background: none;
-  flex: 1;
+#or-text {
+  margin: 20px 0;
+  color: #666;
   font-size: 14px;
 }
 
-/*------------ SELLER ------------ */
+#signup-redirect-btn,
+#login-redirect-btn {
+  display: inline-block;
+  background-color: white;
+  border: 2px solid #a4e200;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
 
-/* Sliding Sidebar Menu Styles */
+#signup-redirect-btn:hover,
+#login-redirect-btn:hover {
+  background-color: #a4e200;
+  color: white;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/*------------ ROLEPAGE ------------ */
+
+.role-selection {
+  font-family: Inter, Arial, sans-serif;
+  background-color: #A2DD00;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.containerRole {
+  text-align: center;
+  padding: 40px;
+  background-color: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#questionRole {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.role-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#role-or {
+  color: #666;
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.role-btn {
+  padding: 15px 30px;
+  background-color: white;
+  border: 2px solid #a4e200;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.role-btn:hover {
+  background-color: #a4e200;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/*------------ General Page Layout ------------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background-color: #A2DD00;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #A2DD00;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin: 0 20px;
+  max-width: 500px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.icons button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.icons button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.welcome {
+  color: white;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.username {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.username:hover {
+  color: #e3ecd3;
+}
+
+/*------------ Products Grid ------------ */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.product {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.product:hover {
+  transform: translateY(-5px);
+}
+
+.product .image {
+  background-color: #f5f5f5;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product p {
+  margin: 8px 0;
+  color: #333;
+}
+
+.product p:last-child {
+  font-size: 18px;
+  color: #007B00;
+  font-weight: bold;
+}
+
+/*------------ Filter Sections ------------ */
+
+.filter-section,
+.category-filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #006400;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.filter-left,
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-left label,
+.filter-right label {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.filter-left select,
+.filter-right select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  min-width: 150px;
+}
+
+/*------------ Product Buttons ------------ */
+
+.product-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.add-cart-btn,
+.checkout-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-cart-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.checkout-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.add-cart-btn:hover,
+.checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/*------------ Side Menu ------------ */
+
 .side-menu {
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   top: 0;
   left: 0;
   background-color: #1d9e0f;
@@ -144,495 +421,174 @@
 }
 
 .side-menu a {
-  padding: 8px 8px 8px 32px;
+  padding: 12px 20px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 18px;
   color: white;
   display: block;
   transition: 0.3s;
 }
 
 .side-menu a:hover {
-  background-color: #ddd;
-  color: black;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .side-menu .close-btn {
-  color: white;
-  font-size: 36px;
   position: absolute;
-  top: 0;
+  top: 15px;
   right: 25px;
-  font-weight: bold;
+  font-size: 36px;
+  color: white;
+  background: none;
   border: none;
-  background-color: transparent;
+  cursor: pointer;
 }
 
 .menu-btn {
-  font-size: 30px;
+  font-size: 24px;
   cursor: pointer;
   color: white;
   background: none;
   border: none;
-  position: absolute;
-  left: 135px;
-  top: 13px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
 }
 
 .menu-btn:hover {
-  color: #ddd;
+  background-color: rgba(255, 255, 255, 0.1);
 }
+
+/*------------ Modal Styles ------------ */
 
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 500px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.close-btn {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Edit Part */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: none;
 }
 
 .modal-content {
   background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
   position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.modal input {
-  padding: 8px;
-  margin: 8px 0;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.modal h2 {
+  margin-bottom: 20px;
+  color: #333;
 }
 
-/* Category Dropdown in Modal */
+.modal label {
+  display: block;
+  margin: 10px 0 5px;
+  color: #333;
+  font-weight: 500;
+}
+
+.modal input,
 .modal select {
-  padding: 8px;
-  font-size: 16px;
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
 .modal-actions {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   margin-top: 20px;
 }
 
-/* Button styles */
-button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
+.save-btn,
+.delete-btn {
+  padding: 12px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
 }
 
 .save-btn {
-  background-color: #52e933; 
+  background-color: #4CAF50;
   color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  width: 100%;
 }
 
 .delete-btn {
-  background-color: #e74c3c;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  width: 100%;
-}
-
-.close-btn {
-  color: #aaa;
-  font-size: 30px;
-  position: absolute;
-  top: 5px;
-  right: 15px;
-  cursor: pointer;
-}
-
-
-
-
-/*------------ General Page Layout ------------ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Inter, Arial, Helvetica, sans-serif;
-  background-color: #A2DD00; 
-}
-
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: #A2DD00;
-}
-
-.search-bar {
-  flex-grow: 1;
-  margin: 0 20px;
-  width: 300px;
-}
-
-.search-bar input {
-  padding: 10px;
-  font-size: 16px;
-  width: 100%;
-  border: none;
-  border-radius: 5px;
-}
-
-.icons button {
-  background: none;
-  border: none;
-  font-size: 30px;
-  color: white;
-  margin-left: 10px;
-  cursor: pointer; /* Make the cart and bell clickable */
-}
-
-.message, .cart {
-  position: relative;
-  right: 15px;
-  padding: 5px;
-}
-
-.icons a {
-  text-decoration: none;
-}
-
-.notification {
-  display: none;
-  position: absolute;
-  top: 50px;
-  right: 20px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 200px;
-}
-
-.notification p {
-  margin: 0;
-}
-
-.main {
-  padding: 20px;
-}
-
-.welcome {
-  color: white;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.username {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.product {
-  background-color: white;
-  padding: 20px;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.product .image {
-  background-color: #e0e0e0;
-  width: 100%;
-  height: 200px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-.product p {
-  margin: 5px 0;
-  font-weight: bold;
-}
-
-.product p:last-child {
-  font-size: 16px;
-  color: #007B00;
-}
-
-.edit-btn {
-  background: none;
-  border: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 18px;
-  color: #007B00;
-  cursor: pointer; 
-}
-
-.add-btn {
-  padding: 10px 20px;
-  background-color: #07750b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/*------------ DROPDOWN ------------ */
-
-.category-filter-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
-}
-
-
-.category-filter-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #006400;  
-  padding: 15px 20px;  
-  border-radius: 8px; 
-}
-
-.category-filter {
-  display: flex;
-  align-items: center;
-}
-
-.category-filter label {
-  font-size: 16px;
-  margin-right: 10px;
-  color: white;  
-}
-
-.category-filter select {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  color: black;  
-}
-
-
-/*------------ BUYER ------------ */
-
-/* Filter Section Styles (Price Range & Category Filters) */
-.filter-section {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-  padding: 10px;
-  background-color: #006400; 
-  border-radius: 8px;
-}
-
-.filter-left, .filter-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.filter-left select, .filter-right select {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 150px;
-}
-
-.filter-left label, .filter-right label {
-  color: white;
-  font-size: 16px;
-}
-
-.product-buttons {
-display: flex;
-justify-content: space-between;
-margin-top: 10px;
-gap: 10px;
-}
-
-.add-cart-btn, .checkout-btn {
-padding: 8px 12px;
-font-size: 14px;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-transition: background 0.3s ease, transform 0.2s ease;
-width: 48%; /* Make sure buttons don't overlap */
-}
-
-.add-cart-btn {
-background-color: #4CAF50;
-color: white;
-}
-
-.add-cart-btn:hover {
-background-color: #45a049;
-transform: scale(1.05); 
-}
-
-.checkout-btn {
-background-color: #2196F3;
-color: white;
-}
-
-.checkout-btn:hover {
-background-color: #1976D2;
-transform: scale(1.05);
-}
-
-.add-cart-btn2:focus, .checkout-btn2:focus {
-outline: 2px solid #ff9800;
-outline-offset: 2px;
-}
-
-
-/*------------ ROLEPAGE ------------ */
-
-.role-selection {
-  font-family: Arial, sans-serif;
-  background-color: #A2DD00; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  flex-direction: column; 
-}
-
-.containerRole {
-  text-align: center;
-  padding: 20px;
-  background-color: #A2DD00; 
-  border-radius: 15px;
-  width: 80%;
-  max-width: 500px;
-}
-
-.questionRole {
-  font-size: 2rem;
-  color: white;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.role-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  font-size: 2rem;
-}
-
-/* Button Styles */
-.role-btn {
-  padding: 10px 25px;
-  background-color: white;
-  border: 2px solid #00c853;
-  color: #00c853;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 500px;
-  text-align: center;
-}
-
-.role-btn:hover {
-  background-color: #00c853;
+  background-color: #f44336;
   color: white;
 }
 
-@media (max-width: 600px) {
-  .container {
-      width: 90%;
+.save-btn:hover,
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/*------------ Responsive Design ------------ */
+
+@media (max-width: 768px) {
+  .products {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-  .questionRole {
-      font-size: 1.5rem;
+
+  .filter-section,
+  .category-filter-container {
+    flex-direction: column;
+    align-items: stretch;
   }
+
+  .filter-left,
+  .filter-right {
+    width: 100%;
+  }
+
+  .filter-left select,
+  .filter-right select {
+    width: 100%;
+  }
+
+  .modal-content {
+    margin: 20% auto;
+    width: 95%;
+  }
+
   .role-btn {
-      width: 180px;
-      font-size: 1rem;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #form-box {
+    padding: 20px;
+  }
+
+  .containerRole {
+    padding: 20px;
+  }
+
+  #questionRole {
+    font-size: 1.5rem;
+  }
+
+  .welcome {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
   }
 }
 
