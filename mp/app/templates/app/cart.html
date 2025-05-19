@@ -190,32 +190,35 @@
                         <span>{{ item.product.name }}</span>
                     </div>
                     <div class="quantity-container">
-                        <form method="post" action="{% url 'update_cart' item.id %}" style="display: inline;">
+                        <form method="post" action="{% url 'update_cart' %}" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="decrease">
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
                             <button type="submit" class="quantity-btn">-</button>
                         </form>
                         <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" readonly>
-                        <form method="post" action="{% url 'update_cart' item.id %}" style="display: inline;">
+                        <form method="post" action="{% url 'update_cart' %}" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="increase">
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
                             <button type="submit" class="quantity-btn">+</button>
                         </form>
                     </div>
-                    <span>${{ item.get_total }}</span>
-                    <form method="post" action="{% url 'update_cart' item.id %}">
+                    <span>Php {{ item.get_total }}</span>
+                    <form method="post" action="{% url 'update_cart' %}">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="remove">
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
                         <button type="submit" class="remove-btn">Remove</button>
                     </form>
                 </div>
             {% endfor %}
             
             <div style="text-align: right; margin-top: 20px; font-weight: bold; font-size: 20px;">
-                Total: ${{ cart.get_total_price }}
+                Total: Php <span id="total-price">{{ cart.get_total_price }}</span>
             </div>
             
-            <a href="{% url 'checkout_page' %}">
+            <a href="{% url 'checkout' %}">
                 <button class="checkout-btn2">Proceed to Checkout</button>
             </a>
         {% else %}

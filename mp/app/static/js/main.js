@@ -22,12 +22,17 @@ function updateCartUI(cartTotal, cartCount) {
     if (cartCountElement) {
         cartCountElement.innerText = cartCount;
     }
+    const cartTotalElement = document.querySelector('.total-price span');
+    if (cartTotalElement) {
+        cartTotalElement.innerText = cartTotal.toFixed(2);
+    }
 }
 
 // Placeholder function to show notifications to the user
 function showNotification(message, type = 'success') {
     console.log(`Notification (${type}): ${message}`);
     // You can add code here later to display a visible notification (e.g., using a modal or a toast)
+    alert(`${type.toUpperCase()}: ${message}`); // Using alert for simplicity
 }
 
 window.switchRole = function() {
@@ -80,7 +85,7 @@ window.addEventListener('load', () => {
   const cat = document.getElementById('category-filter');
   if (cat) {
     cat.addEventListener('change', filterProducts);
-    filterProducts();
+    // filterProducts(); // Not needed on load if server renders initial list
   }
 });
 
@@ -195,6 +200,10 @@ function addToCart(productId, quantity = 1) {
         if (data.status === 'success') {
             updateCartUI(data.cart_total, data.cart_count);
             showNotification('Product added to cart successfully!');
+            // If on the cart page, update the specific item's quantity and total
+            if (window.location.pathname === '/cart/') {
+                updateCartItemUI(data.item_id, data.quantity, data.item_total);
+            }
         } else {
             showNotification('Error adding product to cart', 'error');
         }
@@ -223,6 +232,8 @@ function updateCartItem(productId, quantity) {
         if (data.status === 'success') {
             updateCartUI(data.cart_total, data.cart_count);
             showNotification('Cart updated successfully!');
+            // Update the quantity displayed for the specific item in the cart
+            updateCartItemUI(data.item_id, data.quantity, data.item_total);
         } else {
             showNotification('Error updating cart', 'error');
         }
@@ -249,11 +260,19 @@ function removeFromCart(productId) {
     .then(data => {
         if (data.status === 'success') {
             updateCartUI(data.cart_total, data.cart_count);
-            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            showNotification('Product removed from cart');
+            // Remove the item from the UI
+            const cartItem = document.querySelector(`#product-${data.item_id}`);
             if (cartItem) {
                 cartItem.remove();
             }
-            showNotification('Product removed from cart');
+             // If the cart is now empty, display the empty cart message
+            if (data.cart_count === 0) {
+                const cartItemsContainer = document.getElementById('cart-items-container');
+                if (cartItemsContainer) {
+                    cartItemsContainer.innerHTML = '<div class="empty-cart-message">Your cart is empty. <a href="/products/">Continue shopping</a> to add products to your cart.</a></div>';
+                }
+            }
         } else {
             showNotification('Error removing product from cart', 'error');
         }
@@ -262,6 +281,19 @@ function removeFromCart(productId) {
         console.error('Error:', error);
         showNotification('Error removing product from cart', 'error');
     });
+}
+
+// New function to update the UI for a specific cart item
+function updateCartItemUI(itemId, quantity, itemTotal) {
+    const quantityInput = document.querySelector(`#product-${itemId} .quantity-input`);
+    const totalSpan = document.querySelector(`#product-${itemId} span:last-child`);
+    
+    if (quantityInput) {
+        quantityInput.value = quantity;
+    }
+    if (totalSpan) {
+        totalSpan.innerText = `Php ${itemTotal.toFixed(2)}`;
+    }
 }
 
 function checkoutProduct(productId) {
@@ -325,6 +357,8 @@ function filterByCategory() {
 }
 
 // ------------------------ CART --------------------------- //
+// Remove conflicting local storage logic
+/*
 let productToRemove;
 function increaseQuantity(id) {
   const fld = document.getElementById('quantity-'+id);
@@ -365,6 +399,7 @@ function saveCartAndProceed() {
   localStorage.setItem('cartData', JSON.stringify(cart));
   window.location.href = '/checkout';
 }
+*/
 
 // ------------------------ CHECKOUT --------------------------- //
 function selectPaymentMethod(method) {

@@ -98,7 +98,37 @@
             </section>
         </main>
     </div>
-<script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // Function to clear the cart on buyer page load
+        function clearCartOnLoad() {
+            fetch('/update-cart/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Make sure getCookie is available in main.js or here
+                },
+                body: JSON.stringify({
+                    action: 'clear'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Cart cleared on buyer page load.');
+                    // Optionally update a cart count display if you have one on this page
+                } else {
+                    console.error('Error clearing cart on buyer page load:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Network error clearing cart:', error);
+            });
+        }
+
+        // Call the clearCartOnLoad function when the page finishes loading
+        window.addEventListener('load', clearCartOnLoad);
+    </script>
+<script src="{% static 'js/main.js' %}" defer></script>
 </body>
 </html>
 

@@ -248,17 +248,17 @@ def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
     
-    # Check if product is already in cart
-    cart_item, item_created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        defaults={'quantity': 1}
-    )
-    
-    # If item already exists, increase quantity
-    if not item_created:
+    try:
+        # Check if the product is already in the cart
+        cart_item = CartItem.objects.get(cart=cart, product=product)
+        # If it exists, increase the quantity
         cart_item.quantity += 1
         cart_item.save()
+        messages.success(request, f'{product.name} quantity updated in your cart.')
+    except CartItem.DoesNotExist:
+        # If the item is not in the cart, create a new cart item
+        CartItem.objects.create(cart=cart, product=product, quantity=1)
+        messages.success(request, f'{product.name} added to your cart.')
     
     messages.success(request, f'{product.name} added to your cart.')
     return redirect('product_list')
@@ -267,15 +267,16 @@ def add_to_cart(request, product_id):
 def update_cart(request):
     if request.method == 'POST':
         try:
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            print(f"DEBUG: Initial cart items for user {request.user.username}: {cart.items.all()}")
+
             data = json.loads(request.body)
             product_id = data.get('product_id')
             quantity = int(data.get('quantity', 1))
             action = data.get('action')
 
-            cart, created = Cart.objects.get_or_create(user=request.user)
-            product = get_object_or_404(Product, id=product_id)
-
             if action == 'add':
+                product = get_object_or_404(Product, id=product_id)
                 cart_item, created = CartItem.objects.get_or_create(
                     cart=cart,
                     product=product,
@@ -285,22 +286,43 @@ def update_cart(request):
                     cart_item.quantity += quantity
                     cart_item.save()
             elif action == 'update':
-                cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+                product = get_object_or_404(Product, id=product_id)
+                cart_item = get_object_or_create(CartItem, cart=cart, product=product)
                 cart_item.quantity = quantity
                 cart_item.save()
             elif action == 'remove':
+                product = get_object_or_404(Product, id=product_id)
                 CartItem.objects.filter(cart=cart, product=product).delete()
+            elif action == 'clear':
+                cart.items.all().delete()
+                messages.info(request, 'Your cart has been cleared.')
 
             # Recalculate cart total
             cart_items = CartItem.objects.filter(cart=cart)
             total = sum(item.product.price * item.quantity for item in cart_items)
+
+            print(f"DEBUG: Cart items in update_cart: {cart_items}")
+            print(f"DEBUG: Calculated total in update_cart: {total}")
+
             cart.total_price = total
             cart.save()
+
+            # Get the updated cart item to return its details
+            updated_cart_item = None
+            if product_id:
+                try:
+                    product = Product.objects.get(id=product_id)
+                    updated_cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+                except Product.DoesNotExist:
+                    pass
 
             return JsonResponse({
                 'status': 'success',
                 'cart_total': float(cart.total_price),
-                'cart_count': cart_items.count()
+                'cart_count': cart_items.count(),
+                'item_id': updated_cart_item.id if updated_cart_item else None,
+                'quantity': updated_cart_item.quantity if updated_cart_item else 0,
+                'item_total': float(updated_cart_item.get_total()) if updated_cart_item else 0.00,
             })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
