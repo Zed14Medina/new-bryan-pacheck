@@ -11,13 +11,23 @@
 <body class="role-selection">
     <div class="containerRole">
         <h1 id="questionRole">Choose your role today:</h1>
-    <br>
-        <div class="role-container">
-            <button onclick="window.location.href='{% url "buyer" %}'" class="role-btn">Buyer</button>
-            <p id="role-or"><b>or</b></p>
-            <button onclick="window.location.href='{% url "seller_home" %}'" class="role-btn">Seller</button>            
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
+            {% endfor %}
         </div>
-    </br>
+        {% endif %}
+
+        <form method="POST" action="{% url 'switch_role' %}" class="role-form">
+            {% csrf_token %}
+            <div class="role-container">
+                <button type="submit" name="role" value="Buyer" class="role-btn">Buyer</button>
+                <p id="role-or"><b>or</b></p>
+                <button type="submit" name="role" value="Seller" class="role-btn">Seller</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>

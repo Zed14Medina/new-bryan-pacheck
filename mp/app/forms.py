@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category
+from .models import Product, Category, Order
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -13,32 +13,32 @@ class ProductForm(forms.ModelForm):
             'stock_quantity': forms.NumberInput(attrs={'min': '0'}),
         }
 
-class CheckoutForm(forms.Form):
-    shipping_address = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=True)
-    payment_method = forms.ChoiceField(choices=[
-        ('credit_card', 'Credit Card'),
-        ('paypal', 'PayPal'),
-        ('cash_on_delivery', 'Cash on Delivery')
-    ])
+class CheckoutForm(forms.ModelForm):
+    shipping_address = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your complete shipping address'}),
+        required=True
+    )
+    payment_method = forms.ChoiceField(
+        choices=[('COD', 'Cash on Delivery'), ('GCASH', 'GCASH')],
+        required=True,
+        widget=forms.RadioSelect
+    )
+
+    class Meta:
+        model = Order
+        fields = ['shipping_address', 'payment_method']
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder': 'Email', 'id': 'email'}))
-    role = forms.ChoiceField(
-        choices=[('Buyer', 'Buyer'), ('Seller', 'Seller')],
-        widget=forms.Select(attrs={'id': 'role'})
-    )
-    
+    email = forms.EmailField(required=True)
+    role = forms.ChoiceField(choices=[('Buyer', 'Buyer'), ('Seller', 'Seller')], required=True)
+
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
-        widgets = {
-            'username': forms.TextInput(attrs={'placeholder': 'Username', 'id': 'username'}),
-            'password1': forms.PasswordInput(attrs={'placeholder': 'Password', 'id': 'password1'}),
-            'password2': forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'id': 'password2'}),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Remove the default help text from UserCreationForm
-        for fieldname in ['username', 'password1', 'password2']:
-            self.fields[fieldname].help_text = None
+        fields = ('username', 'email', 'password1', 'password2', 'role')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user

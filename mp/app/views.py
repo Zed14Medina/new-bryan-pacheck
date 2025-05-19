@@ -3,9 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group, User
 from django.contrib import messages
-from django.http import HttpResponseForbidden
-from django.db.models import Sum
+from django.http import HttpResponseForbidden, JsonResponse
+from django.db.models import Sum, Q
 from django.db import transaction
+from decimal import Decimal
+import json
 
 from .models import Product, Category, Cart, CartItem, Order, OrderDetail
 from .forms import ProductForm, CheckoutForm, CustomUserCreationForm  # Import the CustomUserCreationForm
@@ -18,7 +20,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('role_page')  # Redirect after successful login
+            return redirect('role_selection')  # Redirect after successful login
         else:
             return render(request, 'app/login.html', {'error': 'Invalid credentials'})
     return render(request, 'app/login.html')
@@ -47,7 +49,7 @@ def signup(request):
             login(request, user)
             
             messages.success(request, f'Account created successfully! You are now logged in as a {role}.')
-            return redirect('role_page')
+            return redirect('role_selection')
         else:
             # If form has errors, display them to the user
             for field, errors in form.errors.items():
@@ -59,10 +61,28 @@ def signup(request):
 
 # Add role switching functionality
 @login_required
+def role_selection(request):
+    if request.user.is_authenticated:
+        # Check if user already has a role
+        if request.user.groups.filter(name='Seller').exists():
+            return redirect('seller_dashboard')
+        elif request.user.groups.filter(name='Buyer').exists():
+            return redirect('buyer_dashboard')
+        else:
+            # User has no role, show role selection page
+            return render(request, 'app/rolepage.html')
+    else:
+        return redirect('login')
+
+@login_required
 def switch_role(request):
     if request.method == 'POST':
         role = request.POST.get('role')
         user = request.user
+        
+        if role not in ['Buyer', 'Seller']:
+            messages.error(request, 'Invalid role selected.')
+            return redirect('role_selection')
         
         # Remove user from all role groups
         user.groups.clear()
@@ -75,13 +95,13 @@ def switch_role(request):
         if role == 'Seller':
             user.groups.add(seller_group)
             messages.success(request, 'You are now a Seller!')
+            return redirect('seller_dashboard')
         else:
             user.groups.add(buyer_group)
             messages.success(request, 'You are now a Buyer!')
-            
-        return redirect('role_page')
+            return redirect('buyer_dashboard')
     
-    return render(request, 'app/switch_role.html')
+    return redirect('role_selection')
 
 # User Logout View
 def logout_view(request):
@@ -114,8 +134,19 @@ def is_seller(user):
 @login_required
 @user_passes_test(is_seller)
 def seller_dashboard(request):
+    if not request.user.groups.filter(name='Seller').exists():
+        messages.error(request, 'You must be a seller to access this page.')
+        return redirect('role_selection')
+    
     products = Product.objects.filter(seller=request.user)
-    return render(request, 'app/seller_dashboard.html', {'products': products})
+    categories = Category.objects.all()
+    
+    context = {
+        'products': products,
+        'categories': categories,
+        'user': request.user
+    }
+    return render(request, 'app/seller.html', context)
 
 @login_required
 @user_passes_test(is_seller)
@@ -189,13 +220,13 @@ def product_list(request):
     }
     return render(request, 'app/product_list.html', context)
 
+@login_required
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-    
+    related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[:4]
     context = {
         'product': product,
-        'related_products': related_products,
+        'related_products': related_products
     }
     return render(request, 'app/product_detail.html', context)
 
@@ -233,30 +264,47 @@ def add_to_cart(request, product_id):
     return redirect('product_list')
 
 @login_required
-def update_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    
+def update_cart(request):
     if request.method == 'POST':
-        action = request.POST.get('action')
-        
-        if action == 'increase':
-            cart_item.quantity += 1
-        elif action == 'decrease':
-            if cart_item.quantity > 1:
-                cart_item.quantity -= 1
-            else:
-                cart_item.delete()
-                messages.success(request, 'Item removed from cart.')
-                return redirect('cart_page')
-        elif action == 'remove':
-            cart_item.delete()
-            messages.success(request, 'Item removed from cart.')
-            return redirect('cart_page')
-            
-        cart_item.save()
-        messages.success(request, 'Cart updated successfully.')
-        
-    return redirect('cart_page')
+        try:
+            data = json.loads(request.body)
+            product_id = data.get('product_id')
+            quantity = int(data.get('quantity', 1))
+            action = data.get('action')
+
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            product = get_object_or_404(Product, id=product_id)
+
+            if action == 'add':
+                cart_item, created = CartItem.objects.get_or_create(
+                    cart=cart,
+                    product=product,
+                    defaults={'quantity': quantity}
+                )
+                if not created:
+                    cart_item.quantity += quantity
+                    cart_item.save()
+            elif action == 'update':
+                cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+                cart_item.quantity = quantity
+                cart_item.save()
+            elif action == 'remove':
+                CartItem.objects.filter(cart=cart, product=product).delete()
+
+            # Recalculate cart total
+            cart_items = CartItem.objects.filter(cart=cart)
+            total = sum(item.product.price * item.quantity for item in cart_items)
+            cart.total_price = total
+            cart.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'cart_total': float(cart.total_price),
+                'cart_count': cart_items.count()
+            })
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 # Checkout and Order Processing Views
 @login_required
@@ -317,13 +365,25 @@ def checkout_page(request):
 @login_required
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    order_items = order.order_details.all().select_related('product')
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST, instance=order)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.status = 'confirmed'
+            order.save()
+            
+            # Clear the cart after successful order
+            Cart.objects.filter(user=request.user).delete()
+            
+            messages.success(request, 'Order confirmed successfully!')
+            return redirect('order_detail', order_id=order.id)
+    else:
+        form = CheckoutForm(instance=order)
     
-    context = {
+    return render(request, 'app/order_confirmation.html', {
         'order': order,
-        'order_items': order_items,
-    }
-    return render(request, 'app/order_confirmation.html', context)
+        'form': form
+    })
 
 @login_required
 def order_history(request):
@@ -337,10 +397,73 @@ def order_history(request):
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    order_items = order.order_details.all().select_related('product')
+    order_items = OrderDetail.objects.filter(order=order)
+    
+    return render(request, 'app/order_detail.html', {
+        'order': order,
+        'order_items': order_items
+    })
+
+@login_required
+def search_products(request):
+    query = request.GET.get('q', '')
+    if query:
+        products = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)
+        ).filter(is_active=True)
+    else:
+        products = Product.objects.filter(is_active=True)
     
     context = {
-        'order': order,
-        'order_items': order_items,
+        'products': products,
+        'query': query
     }
-    return render(request, 'app/order_detail.html', context)
+    return render(request, 'app/buyer.html', context)
+
+@login_required
+def filter_products(request):
+    category_id = request.GET.get('category')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    
+    products = Product.objects.filter(is_active=True)
+    
+    if category_id:
+        products = products.filter(category_id=category_id)
+    if min_price:
+        products = products.filter(price__gte=Decimal(min_price))
+    if max_price:
+        products = products.filter(price__lte=Decimal(max_price))
+    
+    context = {
+        'products': products,
+        'categories': Category.objects.all(),
+        'selected_category': category_id,
+        'min_price': min_price,
+        'max_price': max_price
+    }
+    return render(request, 'app/buyer.html', context)
+
+@login_required
+def buyer_dashboard(request):
+    if not request.user.groups.filter(name='Buyer').exists():
+        messages.error(request, 'You must be a buyer to access this page.')
+        return redirect('role_selection')
+    
+    products = Product.objects.filter(is_active=True)
+    categories = Category.objects.all()
+    
+    context = {
+        'products': products,
+        'categories': categories,
+        'user': request.user
+    }
+    return render(request, 'app/buyer.html', context)
+
+@login_required
+def seller_orders(request):
+    # Placeholder implementation
+    # You can later implement order management for sellers here
+    return render(request, 'app/seller_orders.html', {})
